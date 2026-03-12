@@ -23,8 +23,8 @@ const studentSchema = mongoose.Schema(
         department: {
             type: String,
             required: [true, 'Please add a department'],
-            enum: ['Computer Science', 'Electronics', 'Mechanical', 'Civil', 'Electrical'],
         },
+
         year: {
             type: Number,
             required: [true, 'Please add a year'],
