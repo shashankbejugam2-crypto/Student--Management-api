@@ -5,11 +5,18 @@ import connectDB from './config/db.js';
 import studentRoutes from './routes/studentRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import { connectProducer } from './services/kafkaProducer.js';
+import { startPrincipalNotificationConsumer } from './services/kafkaConsumer.js';
 
 dotenv.config();
 
 // Connect to database
 connectDB();
+
+// Initialize Kafka producer & consumer (non-blocking)
+connectProducer();
+startPrincipalNotificationConsumer();
 
 const app = express();
 

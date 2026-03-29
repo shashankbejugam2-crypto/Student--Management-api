@@ -1,4 +1,5 @@
 import Student from '../models/Student.js';
+import { sendStudentAddedNotification } from '../services/kafkaProducer.js';
 
 // @desc    Get all students
 // @route   GET /api/students
@@ -45,6 +46,12 @@ export const getStudentById = async (req, res) => {
 export const createStudent = async (req, res) => {
     try {
         const student = await Student.create(req.body);
+
+        // Fire-and-forget: send Kafka notification to principal
+        sendStudentAddedNotification(student).catch((err) =>
+            console.error('Kafka notification error:', err.message)
+        );
+
         res.status(201).json({ data: student });
     } catch (error) {
         if (error.code === 11000) {
