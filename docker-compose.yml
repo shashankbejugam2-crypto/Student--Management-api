@@ -1,14 +1,17 @@
+version: "3.8"
+
 services:
   app:
     build: .
     ports:
-      - "5000:5000" # match PORT=5000 in your .env
+      - "5000:5000"
     depends_on:
       - kafka
     env_file:
-      - .env # loads ALL your .env vars into the container
+      - .env
     environment:
-      - KAFKA_BROKERS=kafka:9092 # override only this one line from .env
+      - KAFKA_BROKERS=kafka:9092
+    command: sh -c "sleep 15 && npm start" # wait for Kafka
     networks:
       - app-network
 
@@ -26,13 +29,11 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
-      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
