@@ -8,6 +8,7 @@ services:
       - "5000:5000"
     depends_on:
       - kafka
+      - mongo
     env_file:
       - .env
     environment:
@@ -42,6 +43,14 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_HEAP_OPTS=-Xmx256M -Xms128M
+    networks:
+      - app-network
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
     networks:
       - app-network
 
